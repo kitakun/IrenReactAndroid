@@ -2,16 +2,22 @@ import { unzip } from 'react-native-zip-archive';
 import * as RNFS from 'react-native-fs';
 import { It2Picker } from '../modules/It2PickerModule';
 import { DOMParser } from 'xmldom';
+import { IQuestion } from 'src/types';
 
 window.DOMParser = DOMParser;
+
+interface questionsResponse {
+    fileName: string;
+    questions: Array<IQuestion>;
+}
 
 /**
  * Show pickup dialog and unzip data from it
  */
-const getQuestionsFromTest = async function () {
+const getQuestionsFromTest = async function (): Promise<questionsResponse> {
     try {
         const response = await It2Picker.pickFile()
-        console.log(`Recieved path: ${response}`);
+        const splittedName = response.split('/');
 
         const unzipPath = await unzipTestArchive(response, 'test.it2');
 
@@ -21,9 +27,25 @@ const getQuestionsFromTest = async function () {
         const xmlDoc = parser.parseFromString(rawXmlData);
 
         const allQuestionsNodes = xmlDoc.getElementsByTagName('question');
-        console.log('get questions count = ' + allQuestionsNodes.length)
+        const arrayQuestionNodes = Array.from(allQuestionsNodes);
+        return {
+            fileName: splittedName[splittedName.length - 1],
+            questions: arrayQuestionNodes.map(node => {
+                const choicesHolder = Array.from(node.getElementsByTagName('choice'));
+                return {
+                    questionTest: node.getElementsByTagName('text')[0].attributes[0].nodeValue,
+                    choices: choicesHolder.map(choiceNode => {
+                        return {
+                            correct: choiceNode.getAttribute('correct') === 'true',
+                            text: choiceNode.getElementsByTagName('text')[0].attributes[0].nodeValue
+                        }
+                    })
+                } as IQuestion;
+            })
+        }
     } catch (exception) {
         console.error(exception);
+        return Promise.reject(undefined);
     }
 }
 

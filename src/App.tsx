@@ -7,7 +7,7 @@ import { AppRegistry } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 
 import HomeScreen from './screens/Home.Screen';
-import ProfileScreen from './screens/Profile.Screen';
+import DoTestScreen from './screens/DoTest.Screen';
 
 const Stack = createStackNavigator();
 
@@ -21,7 +21,11 @@ const App = () => {
             component={HomeScreen}
             options={{ title: 'Welcome' }}
           />
-          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen
+            name="DoTest"
+            component={DoTestScreen}
+            options={({ route }) => ({ title: `File: ${(route.params as any).filename} (${(route.params as any).data.length})` })}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>

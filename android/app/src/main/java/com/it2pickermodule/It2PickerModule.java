@@ -23,7 +23,7 @@ public class It2PickerModule extends ReactContextBaseJavaModule {
   private static final String E_ACTIVITY_DOES_NOT_EXIST = "E_ACTIVITY_DOES_NOT_EXIST";
   private static final String E_PICKER_CANCELLED = "E_PICKER_CANCELLED";
   private static final String E_FAILED_TO_SHOW_PICKER = "E_FAILED_TO_SHOW_PICKER";
-  private static final String E_NO_IMAGE_DATA_FOUND = "E_NO_IMAGE_DATA_FOUND";
+  private static final String E_NO_FILE_DATA_FOUND = "E_NO_FILE_DATA_FOUND";
 
   private Promise mPickerPromise;
 
@@ -39,7 +39,7 @@ public class It2PickerModule extends ReactContextBaseJavaModule {
             Uri uri = intent.getData();
 
             if (uri == null) {
-              mPickerPromise.reject(E_NO_IMAGE_DATA_FOUND, "No file data found");
+              mPickerPromise.reject(E_NO_FILE_DATA_FOUND, "No file data found");
             } else {
               final String[] split = uri.getPath().split(":");
 
@@ -90,12 +90,12 @@ public class It2PickerModule extends ReactContextBaseJavaModule {
     mPickerPromise = resultPromise;
 
     try {
-      final Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+      final Intent fileSelectorIntent = new Intent(Intent.ACTION_GET_CONTENT);
 
-      galleryIntent.addCategory(Intent.CATEGORY_OPENABLE);
-      galleryIntent.setType("*/*");
+      fileSelectorIntent.addCategory(Intent.CATEGORY_OPENABLE);
+      fileSelectorIntent.setType("*/*");
 
-      final Intent chooserIntent = Intent.createChooser(galleryIntent, "Pick an .it2 file");
+      final Intent chooserIntent = Intent.createChooser(fileSelectorIntent, "Pick an .it2 file");
 
       currentActivity.startActivityForResult(chooserIntent, IMAGE_PICKER_REQUEST);
     } catch (Exception e) {
