@@ -7,7 +7,8 @@
         "ios": "react-native run-ios",
         "start": "react-native start",
         "test": "jest",
-        "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+        "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+        "web": "webpack-dev-server --open"
     },
     "dependencies": {
         "@react-native-community/masked-view": "^0.1.10",
@@ -18,9 +19,11 @@
         "react-native": "0.63.0",
         "react-native-fs": "^2.16.6",
         "react-native-gesture-handler": "^1.6.1",
+        "react-native-paper": "^4.0.1",
         "react-native-reanimated": "^1.9.0",
         "react-native-safe-area-context": "^3.1.1",
         "react-native-screens": "^2.9.0",
+        "react-native-vector-icons": "^7.0.0",
         "react-native-zip-archive": "^5.0.4"
     },
     "devDependencies": {
