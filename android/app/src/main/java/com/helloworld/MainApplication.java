@@ -11,7 +11,8 @@ import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import io.github.elyx0.reactnativedocumentpicker.DocumentPickerPackage; // Files picker
+import com.it2pickermodule.It2PickerPackage; // Custom file picker handwritten
+import com.rnfs.RNFSPackage; // File system
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -28,6 +29,7 @@ public class MainApplication extends Application implements ReactApplication {
           List<ReactPackage> packages = new PackageList(this).getPackages();
           // Packages that cannot be autolinked yet can be added manually here, for example:
           // packages.add(new MyReactNativePackage());
+          packages.add(new It2PickerPackage());
           return packages;
         }
 
