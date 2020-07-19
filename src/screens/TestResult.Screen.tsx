@@ -53,7 +53,6 @@ const TestResultScreen = ({ navigation }: { navigation: INavigation }) => {
     if (!subbedOnClosed) {
         const subFunction = function () {
             navigation.removeListener('beforeRemove', subFunction);
-            console.warn('clear test data');
             store.dispatch(clearTestData());
             subbedOnClosed = false;
         };

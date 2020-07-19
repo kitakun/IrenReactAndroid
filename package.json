@@ -11,6 +11,7 @@
         "web": "webpack-dev-server --open"
     },
     "dependencies": {
+        "@react-native-community/async-storage": "^1.11.0",
         "@react-native-community/masked-view": "^0.1.10",
         "@react-navigation/native": "^5.7.0",
         "@react-navigation/stack": "^5.7.0",
@@ -27,7 +28,8 @@
         "react-native-vector-icons": "^7.0.0",
         "react-native-zip-archive": "^5.0.4",
         "react-redux": "^7.2.0",
-        "redux": "^4.0.5"
+        "redux": "^4.0.5",
+        "redux-thunk": "^2.3.0"
     },
     "devDependencies": {
         "@babel/core": "^7.8.4",

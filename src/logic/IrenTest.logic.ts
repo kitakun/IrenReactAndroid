@@ -6,20 +6,33 @@ import { IQuestion } from 'src/types';
 
 window.DOMParser = DOMParser;
 
-interface questionsResponse {
+export interface QuestionsResponse {
     fileName: string;
+    unpackFileName: string;
     questions: Array<IQuestion>;
 }
 
 /**
  * Show pickup dialog and unzip data from it
  */
-const getQuestionsFromTest = async function (): Promise<questionsResponse> {
+const getQuestionsFromTest = async function (): Promise<QuestionsResponse> {
     try {
         const response = await It2Picker.pickFile()
         const splittedName = response.split('/');
 
-        const unzipPath = await unzipTestArchive(response, 'test.it2');
+        const unzipPath = await unzipTestArchive(response, `${splittedName[splittedName.length - 1]}.it2`);
+
+        return await getQuestionsFromFilePath(unzipPath);
+
+    } catch (exception) {
+        console.error(exception);
+        return Promise.reject(undefined);
+    }
+}
+
+const getQuestionsFromFilePath = async function (unzipPath: string): Promise<QuestionsResponse> {
+    try {
+        const splittedName = unzipPath.split('/');
 
         const rawXmlData = await RNFS.readFile(unzipPath);
 
@@ -30,6 +43,7 @@ const getQuestionsFromTest = async function (): Promise<questionsResponse> {
         const arrayQuestionNodes = Array.from(allQuestionsNodes);
         return {
             fileName: splittedName[splittedName.length - 1],
+            unpackFileName: unzipPath,
             questions: arrayQuestionNodes.map(node => {
                 const choicesHolder = Array.from(node.getElementsByTagName('choice'));
                 return {
@@ -60,7 +74,7 @@ const unzipTestArchive = async function (sourcePath: string, sourceName: string)
 
     const pathToUnzip = `${RNFS.ExternalDirectoryPath}/${sourceName.replace('.it2', '')}`;
 
-    console.log(`pathToUnzip=${pathToUnzip}`);
+    // console.log(`pathToUnzip=${pathToUnzip}`);
 
     await RNFS.mkdir(pathToUnzip);
 
@@ -71,4 +85,4 @@ const unzipTestArchive = async function (sourcePath: string, sourceName: string)
     return `${unzipPath}/test.xml`;
 }
 
-export { getQuestionsFromTest };
+export { getQuestionsFromTest, getQuestionsFromFilePath };

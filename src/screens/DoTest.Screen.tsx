@@ -7,9 +7,9 @@ import { RadioButton, Button } from 'react-native-paper';
 import { IQuestion } from 'src/types';
 // States
 import { useSelector } from 'react-redux';
+import { AppState } from '../state/types';
 import { store } from '../App';
 import * as TestActions from '../state/test/actions';
-import { AppState } from '../state/types';
 
 interface Props {
     navigation: StackNavigationProp<{}>;

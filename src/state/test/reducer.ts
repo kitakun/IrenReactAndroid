@@ -1,4 +1,4 @@
-import { HumanTestState, HumanTestAction, AnswerSelectedAction, LoadTestDataAction, NextQuestionAction } from "../types";
+import { HumanTestState, HumanTestAction, AnswerSelectedAction, LoadTestDataAction, NextQuestionAction } from "./types";
 import { TEST_ACTION_TYPES } from "./actions";
 
 export const initialState: HumanTestState = {
