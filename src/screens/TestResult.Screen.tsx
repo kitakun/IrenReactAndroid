@@ -4,7 +4,14 @@ import { Text, View, StyleSheet, ScrollView } from 'react-native';
 import { IncorrectAnswer } from 'src/types';
 // States
 import { useSelector } from 'react-redux';
+import { store } from '../App';
 import { AppState } from '../state/types';
+import { clearTestData } from '../state/test/actions';
+
+interface INavigation {
+    addListener(type: string, callback: Function): void;
+    removeListener(type: string, callback: Function): void;
+}
 
 const styles = StyleSheet.create({
     testContainer: {
@@ -42,13 +49,15 @@ const styles = StyleSheet.create({
 
 let subbedOnClosed = false;
 
-const TestResultScreen = ({ navigation }: any) => {
+const TestResultScreen = ({ navigation }: { navigation: INavigation }) => {
     if (!subbedOnClosed) {
         const subFunction = function () {
-            navigation.removeListner('beforeRemove', subFunction);
+            navigation.removeListener('beforeRemove', subFunction);
+            console.warn('clear test data');
+            store.dispatch(clearTestData());
             subbedOnClosed = false;
         };
-        navigation.addListner('beforeRemove', subFunction);
+        navigation.addListener('beforeRemove', subFunction);
         subbedOnClosed = true;
     }
 

@@ -53,6 +53,14 @@ export const humanTestReducer = (
             }
             return { ...state };
 
+        case TEST_ACTION_TYPES.CLEAR_TEST_DATA:
+            return {
+                ...state,
+                incorrectAnswers: [],
+                passedTestIndexes: [],
+                currenctTestIndex: Math.floor(Math.random() * state.questions.length)
+            } as HumanTestState;
+
         default:
             return state;
     }
