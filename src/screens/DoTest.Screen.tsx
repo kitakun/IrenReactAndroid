@@ -5,6 +5,11 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RadioButton, Button } from 'react-native-paper';
 // Types
 import { IQuestion } from 'src/types';
+// States
+import { useSelector } from 'react-redux';
+import { store } from '../App';
+import * as TestActions from '../state/test/actions';
+import { AppState } from '../state/types';
 
 interface Props {
     navigation: StackNavigationProp<{}>;
@@ -45,32 +50,71 @@ const styles = StyleSheet.create({
 });
 
 const DoTestScreen = ({ route, navigation }: Props) => {
+    // local state
     const [currentState, setState] = useState<{ selectedText: string }>({ selectedText: '' });
+    if ((useSelector<AppState>(sel => sel.test.questions) as Array<IQuestion>).length != route.params.data.length) {
+        // load data to global state
+        store.dispatch(TestActions.loadTestData(route.params.data));
+    }
+    // gstate vars
+    const questionsList = useSelector<AppState>(sel => sel.test.questions) as Array<IQuestion>;
+    const currentQuestion = useSelector<AppState>(sel => sel.test.currenctTestIndex) as number;
 
     const nextQuestion = () => {
-        console.log('todo');
+        const selectedAnswer = questionsList[currentQuestion].choices.find(f => f.text === currentState.selectedText);
+        let correctAnswer = null;
+        if (selectedAnswer?.correct) {
+            correctAnswer = selectedAnswer;
+        } else {
+            correctAnswer = questionsList[currentQuestion].choices.find(f => f.correct);
+        }
+
+        store.dispatch(TestActions.selectAnswer({
+            correctText: correctAnswer?.text || '',
+            selectedText: selectedAnswer?.text || ''
+        }));
+
+        setState({ selectedText: '' });
+
+        store.dispatch(TestActions.nextQuestion());
+    };
+
+    const finishTest = () => {
+        navigation.goBack();
+        (navigation as any).navigate('TestResults', {});
     };
 
     return <View style={styles.testContainer}>
         <View style={styles.question}>
-            <Text>{route.params.data[0].questionTest}</Text>
+            <Text>{questionsList.length > 0 ? questionsList[currentQuestion].questionTest : '-вопроса нет-'}</Text>
         </View>
         <ScrollView>
 
-            <RadioButton.Group onValueChange={value => setState({ selectedText: value })} value={currentState.selectedText}>
+            <RadioButton.Group
+                onValueChange={value => setState({ selectedText: value })}
+                value={currentState.selectedText}>
                 {
-                    route.params.data[0].choices.map(
-                        choice =>
-                            <View style={styles.choice}>
-                                <RadioButton.Item
-                                    label={choice.text}
-                                    value={choice.text} />
-                            </View>
-                    )
+                    questionsList.length > 0
+                        ? questionsList[currentQuestion].choices.map(
+                            choice =>
+                                <View
+                                    style={styles.choice}
+                                    key={choice.text}>
+                                    <RadioButton.Item
+                                        label={choice.text}
+                                        value={choice.text} />
+                                </View>
+                        )
+                        : <></>
                 }
             </RadioButton.Group>
         </ScrollView>
         <View>
+            <Button
+                mode={"outlined"}
+                onPress={() => finishTest()}>
+                <Text style={styles.bottomStyles}>Закончить тест</Text>
+            </Button>
             <Button
                 mode={"outlined"}
                 disabled={currentState.selectedText.length === 0}

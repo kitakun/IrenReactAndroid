@@ -42,8 +42,8 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
                 onPress={() => loadTestFromFile()}
             />
 
-            <Text style={homeScreenStyles.title}>Later, {"\n"}
-             here will be previous test link
+            <Text style={homeScreenStyles.title}>Позже, {"\n"}
+             тут будут предыдущие тесты
             </Text>
 
         </View>
