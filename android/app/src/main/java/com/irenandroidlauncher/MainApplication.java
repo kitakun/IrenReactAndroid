@@ -1,4 +1,4 @@
-package com.helloworld;
+package com.irenandroidlauncher;
 
 import android.app.Application;
 import android.content.Context;
@@ -27,8 +27,6 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
           @SuppressWarnings("UnnecessaryLocalVariable")
           List<ReactPackage> packages = new PackageList(this).getPackages();
-          // Packages that cannot be autolinked yet can be added manually here, for example:
-          // packages.add(new MyReactNativePackage());
           packages.add(new It2PickerPackage());
           return packages;
         }
@@ -66,7 +64,7 @@ public class MainApplication extends Application implements ReactApplication {
          We use reflection here to pick up the class that initializes Flipper,
         since Flipper library is not available in release mode
         */
-        Class<?> aClass = Class.forName("com.helloworld.ReactNativeFlipper");
+        Class<?> aClass = Class.forName("com.irenandroidlauncher.ReactNativeFlipper");
         aClass
             .getMethod("initializeFlipper", Context.class, ReactInstanceManager.class)
             .invoke(null, context, reactInstanceManager);

@@ -49,6 +49,6 @@ const App = () => {
   );
 };
 
-AppRegistry.registerComponent('Iren React Native Tesst Launcher', () => App);
+AppRegistry.registerComponent('IrenAndroid', () => App);
 
 export default App;
