@@ -16,7 +16,7 @@ export enum PREVIOUS_TEST_ACTION_TYPES {
 
 const storeKey = 'previous_test';
 
-export const fetchPreviousTest = (): any => async (dispatch: Function) => {
+export const fetchPreviousTest = (): (dispatch: Function) => Promise<any> => async (dispatch: Function) => {
     dispatch(fetchPreviousTest_Start());
     try {
         const dataFromStorage = await AsyncStorage.getItem(storeKey);
@@ -47,4 +47,6 @@ export const fetchPreviousTest_Error = (err: Error): LoadTestDataAction_Error =>
 
 export const storePreviousTest = (unpackFileName: string): any => async (dispatch: Function) => {
     await AsyncStorage.setItem(storeKey, unpackFileName);
+    /* reload in store */
+    await fetchPreviousTest()(dispatch);
 };

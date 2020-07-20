@@ -1,4 +1,10 @@
-import { HumanTestState, HumanTestAction, AnswerSelectedAction, LoadTestDataAction, NextQuestionAction } from "./types";
+import { ToastAndroid } from 'react-native';
+import {
+    HumanTestState,
+    HumanTestAction,
+    AnswerSelectedAction,
+    LoadTestDataAction
+} from "./types";
 import { TEST_ACTION_TYPES } from "./actions";
 
 export const initialState: HumanTestState = {
@@ -37,6 +43,7 @@ export const humanTestReducer = (
                 }
             }
             if (!getNextQuestion) {
+                ToastAndroid.show('Ошибка при выборе следующего вопроса', ToastAndroid.LONG);
                 console.warn('TODO for some reason next question is not found...');
             }
 

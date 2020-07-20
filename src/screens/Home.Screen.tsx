@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, PermissionsAndroid } from 'react-native';
+import { StyleSheet, View, Text, PermissionsAndroid, ToastAndroid } from 'react-native';
 // thirdparty
 import { FAB, Button } from 'react-native-paper';
 // local
@@ -32,7 +32,8 @@ const homeScreenStyles = StyleSheet.create({
         justifyContent: "space-between"
     },
     prevTestFont: {
-        fontSize: 20
+        fontSize: 20,
+        paddingBottom: 10
     },
     previousTestContainer: {
         backgroundColor: 'white',
@@ -45,35 +46,40 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
     const canFetchPrevTest = useSelector<AppState>(sel => sel.previousTest.status === PreviousTestStatus.NotInited) as boolean;
     if (canFetchPrevTest) {
-        store.dispatch(fetchPreviousTest());
+        store.dispatch(fetchPreviousTest() as any);
     }
     const previousTestData = useSelector<AppState>(sel => sel.previousTest.data) as QuestionsResponse;
     const hasPreviousTest = !!previousTestData;
 
     const loadTestFromFile = async function () {
+        try {
+            const permissionsForReadWrite = await PermissionsAndroid.requestMultiple([
+                "android.permission.READ_EXTERNAL_STORAGE",
+                "android.permission.WRITE_EXTERNAL_STORAGE"
+            ]);
 
-        const permissionsForReadWrite = await PermissionsAndroid.requestMultiple([
-            "android.permission.READ_EXTERNAL_STORAGE",
-            "android.permission.WRITE_EXTERNAL_STORAGE"
-        ]);
-
-        if (permissionsForReadWrite["android.permission.READ_EXTERNAL_STORAGE"] == PermissionsAndroid.RESULTS.GRANTED
-            && permissionsForReadWrite["android.permission.WRITE_EXTERNAL_STORAGE"] == PermissionsAndroid.RESULTS.GRANTED) {
-            const testData = await getQuestionsFromTest();
-            if (testData) {
-
-                await store.dispatch(storePreviousTest(testData.unpackFileName));
+            if (permissionsForReadWrite["android.permission.READ_EXTERNAL_STORAGE"] == PermissionsAndroid.RESULTS.GRANTED
+                && permissionsForReadWrite["android.permission.WRITE_EXTERNAL_STORAGE"] == PermissionsAndroid.RESULTS.GRANTED) {
+                const testData = await getQuestionsFromTest();
                 if (testData) {
-                    navigation.navigate('DoTest', {
-                        filename: testData.fileName,
-                        data: testData.questions
-                    });
+
+                    await store.dispatch(storePreviousTest(testData.unpackFileName));
+                    if (testData) {
+                        navigation.navigate('DoTest', {
+                            filename: testData.fileName,
+                            data: testData.questions
+                        });
+                    }
+                } else {
+                    ToastAndroid.show('Не получилось открыть тест', ToastAndroid.SHORT);
                 }
             } else {
-                // TODO dialog - failed to get test
+                ToastAndroid.show('Нет доступа чтения файлов', ToastAndroid.SHORT);
             }
-        } else {
-            // TODO dialog - no permissions
+        } catch (err) {
+            if (err) {
+                ToastAndroid.show(err.message, ToastAndroid.LONG);
+            }
         }
     }
 
@@ -88,12 +94,12 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
     if (hasPreviousTest) {
         previousTestControl =
             <View style={homeScreenStyles.previousTestContainer}>
-                <View style={homeScreenStyles.inline}>
+                <View>
                     <Text style={homeScreenStyles.prevTestFont}>{previousTestData.fileName} ({previousTestData.questions.length} вопросов)</Text>
                     <Button
                         mode="outlined"
                         icon="arrow-right-bold-circle"
-                        onPress={loadPreviousTest}><Text></Text></Button>
+                        onPress={loadPreviousTest}><Text>Пройти повторно</Text></Button>
                 </View>
             </View>;
     } else {

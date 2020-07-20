@@ -27,6 +27,14 @@ const styles = StyleSheet.create({
         margin: 10,
         flex: 1,
     },
+    title: {
+        backgroundColor: 'white',
+        borderRadius: 8,
+        padding: 10,
+        fontSize: 20,
+        fontWeight: "bold",
+        marginBottom: 10,
+    },
     question: {
         backgroundColor: 'white',
         borderRadius: 8,
@@ -59,6 +67,7 @@ const DoTestScreen = ({ route, navigation }: Props) => {
     // gstate vars
     const questionsList = useSelector<AppState>(sel => sel.test.questions) as Array<IQuestion>;
     const currentQuestion = useSelector<AppState>(sel => sel.test.currenctTestIndex) as number;
+    const passedTestsLength = useSelector<AppState>(sel => sel.test.passedTestIndexes.length) as number;
 
     const nextQuestion = () => {
         const selectedAnswer = questionsList[currentQuestion].choices.find(f => f.text === currentState.selectedText);
@@ -85,6 +94,15 @@ const DoTestScreen = ({ route, navigation }: Props) => {
     };
 
     return <View style={styles.testContainer}>
+        <View style={styles.title}>
+            <Text>Пройдено {passedTestsLength} вопросов</Text>
+            <Button
+                mode={"outlined"}
+                onPress={finishTest}>
+                <Text style={styles.bottomStyles}>Закончить тест</Text>
+            </Button>
+        </View>
+
         <View style={styles.question}>
             <Text>{questionsList.length > 0 ? questionsList[currentQuestion].questionTest : '-вопроса нет-'}</Text>
         </View>
@@ -110,15 +128,11 @@ const DoTestScreen = ({ route, navigation }: Props) => {
             </RadioButton.Group>
         </ScrollView>
         <View>
-            <Button
-                mode={"outlined"}
-                onPress={() => finishTest()}>
-                <Text style={styles.bottomStyles}>Закончить тест</Text>
-            </Button>
+            
             <Button
                 mode={"outlined"}
                 disabled={currentState.selectedText.length === 0}
-                onPress={() => nextQuestion()}>
+                onPress={nextQuestion}>
                 <Text style={styles.bottomStyles}>Следующий вопрос</Text>
             </Button>
         </View>

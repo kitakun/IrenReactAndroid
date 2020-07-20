@@ -1,3 +1,4 @@
+import { ToastAndroid } from 'react-native';
 import { unzip } from 'react-native-zip-archive';
 import * as RNFS from 'react-native-fs';
 import { It2Picker } from '../modules/It2PickerModule';
@@ -42,8 +43,7 @@ const getQuestionsFromTest = async function (): Promise<QuestionsResponse> {
 
         return await getQuestionsFromFilePath(unzipPath);
     } catch (exception) {
-        console.error(exception);
-        return Promise.reject(undefined);
+        return Promise.reject(exception);
     }
 }
 
