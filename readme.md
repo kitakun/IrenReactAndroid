@@ -9,19 +9,19 @@ Iren test launcher for android (possibly make it work on iphone, but lack of mac
 
 ## How to use:
 
-![Initial App Frame](/readme/initialScreen.jpg)
+![Initial App Frame](/readme/initialScreen.jpg){:height="400px"}
 On main window we can see FAB for selecting iren test file with format .it2
 
 Workflow:
 Press FAB - Select it2 file - pass test
 
-![Test Frame](/readme/launchTest.jpg)
+![Test Frame](/readme/launchTest.jpg){:height="400px"}
 Here at top we can see passed tests and finish tests right now.
 At the bottom 'next question' button and possible answers.
 
-![Test Results Frame](/readme/testResults.jpg)
+![Test Results Frame](/readme/testResults.jpg){:height="400px"}
 Here we can see passed tests count and failed tests count.
 At the screen center we can see failed questions with your answer and correct answer.
 
-![Initial Screen after Test](/readme/initialScreenAfterTest.jpg)
+![Initial Screen after Test](/readme/initialScreenAfterTest.jpg){:height="400px"}
 After any passed or skipped test we can re-try right from main screen.
