@@ -105,7 +105,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
     } else {
         previousTestControl =
             <View style={homeScreenStyles.previousTestContainer}>
-                <Text>Пусто</Text>
+                <Text>Вы еще не проходили тесты</Text>
             </View>;
     }
 
@@ -113,7 +113,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
         <View style={homeScreenStyles.rootContainer}>
             <FAB
                 style={homeScreenStyles.fab}
-                icon="plus"
+                icon="ballot-outline"
                 onPress={loadTestFromFile}
             />
 

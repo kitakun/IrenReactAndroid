@@ -40,7 +40,7 @@ const App = () => {
             <Stack.Screen
               name="TestResults"
               component={TestResultScreen}
-              options={({ route }) => ({ title: 'Результаты теста:' })}
+              options={({ route }) => ({ title: 'Результаты теста' })}
             />
           </Stack.Navigator>
         </NavigationContainer>
