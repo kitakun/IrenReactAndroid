@@ -17,13 +17,30 @@ export interface QuestionsResponse {
  */
 const getQuestionsFromTest = async function (): Promise<QuestionsResponse> {
     try {
-        const response = await It2Picker.pickFile()
+        let response = await It2Picker.pickFile();
+
         const splittedName = response.split('/');
+
+        if (!response) {
+            throw new Error(`Выберите файл .it2!`);
+        }
+
+        if (!response.endsWith('.it2')) {
+            if (response.indexOf('.') >= 0) {
+                const splittedResp = response.split('.');
+                throw new Error(`Формат ${splittedResp[splittedResp.length]} не поддерживается, выберите файл .it2!`);
+            } else {
+                throw new Error(`Выберите файл .it2!`);
+            }
+        }
+
+        if (response.indexOf(':') >= 0) {
+            response = response.split(':')[1];
+        }
 
         const unzipPath = await unzipTestArchive(response, `${splittedName[splittedName.length - 1]}.it2`);
 
         return await getQuestionsFromFilePath(unzipPath);
-
     } catch (exception) {
         console.error(exception);
         return Promise.reject(undefined);

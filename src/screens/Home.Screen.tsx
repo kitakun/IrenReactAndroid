@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, PermissionsAndroid } from 'react-native';
 // thirdparty
 import { FAB, Button } from 'react-native-paper';
 // local
@@ -51,13 +51,29 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
     const hasPreviousTest = !!previousTestData;
 
     const loadTestFromFile = async function () {
-        const testData = await getQuestionsFromTest();
-        await store.dispatch(storePreviousTest(testData.unpackFileName));
-        if (testData) {
-            navigation.navigate('DoTest', {
-                filename: testData.fileName,
-                data: testData.questions
-            });
+
+        const permissionsForReadWrite = await PermissionsAndroid.requestMultiple([
+            "android.permission.READ_EXTERNAL_STORAGE",
+            "android.permission.WRITE_EXTERNAL_STORAGE"
+        ]);
+
+        if (permissionsForReadWrite["android.permission.READ_EXTERNAL_STORAGE"] == PermissionsAndroid.RESULTS.GRANTED
+            && permissionsForReadWrite["android.permission.WRITE_EXTERNAL_STORAGE"] == PermissionsAndroid.RESULTS.GRANTED) {
+            const testData = await getQuestionsFromTest();
+            if (testData) {
+
+                await store.dispatch(storePreviousTest(testData.unpackFileName));
+                if (testData) {
+                    navigation.navigate('DoTest', {
+                        filename: testData.fileName,
+                        data: testData.questions
+                    });
+                }
+            } else {
+                // TODO dialog - failed to get test
+            }
+        } else {
+            // TODO dialog - no permissions
         }
     }
 
